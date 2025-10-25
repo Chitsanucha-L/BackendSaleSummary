@@ -13,7 +13,7 @@ router.get("/", async (req, res) => {
     }
 
     // month จาก query อาจเป็น "1" หรือ "01" ให้แปลงเป็นเลขก่อน
-    const monthInt = parseInt(month) - 1; // JavaScript Month index เริ่มที่ 0 = January
+    const monthInt = parseInt(month); // JavaScript Month index เริ่มที่ 0 = January
 
     const startDate = new Date(Date.UTC(parseInt(year), monthInt, 1, 0, 0, 0));
     const endDate = new Date(Date.UTC(parseInt(year), monthInt + 1, 1, 0, 0, 0));
