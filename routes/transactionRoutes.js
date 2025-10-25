@@ -5,9 +5,32 @@ const router = express.Router();
 
 // ดึงข้อมูลทั้งหมด
 router.get("/", async (req, res) => {
-  const transactions = await Transaction.find().sort({ createdAt: -1 });
-  res.json(transactions);
+  try {
+    const { year, month } = req.query;
+
+    if (!year || !month) {
+      return res.status(400).json({ error: "โปรดระบุ year และ month เช่น ?year=2025&month=1" });
+    }
+
+    // month จาก query อาจเป็น "1" หรือ "01" ให้แปลงเป็นเลขก่อน
+    const monthInt = parseInt(month) - 1; // JavaScript Month index เริ่มที่ 0 = January
+
+    const startDate = new Date(Date.UTC(parseInt(year), monthInt, 1, 0, 0, 0));
+    const endDate = new Date(Date.UTC(parseInt(year), monthInt + 1, 1, 0, 0, 0));
+
+    const transactions = await Transaction.find({
+      createdAt: {
+        $gte: startDate,
+        $lt: endDate,
+      },
+    }).sort({ createdAt: -1 });
+
+    res.json(transactions);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
+
 
 // เพิ่มข้อมูลใหม่
 router.post("/", async (req, res) => {
