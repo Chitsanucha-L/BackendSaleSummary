@@ -31,7 +31,6 @@ router.get("/", async (req, res) => {
   }
 });
 
-
 // เพิ่มข้อมูลใหม่
 router.post("/", async (req, res) => {
   try {
